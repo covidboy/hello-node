@@ -1,0 +1,16 @@
+name: workflow
+
+on: [push, pull_request]
+
+jobs:
+  package:
+    runs-on: ubuntu-20.04
+    steps:
+      - name: checkout
+        uses: actions/checkout@v1      
+      - name: install dependencies
+        run: npm install
+      - name: package node app
+        run: npm pack
+      - name: create docker image
+        run: docker build .
