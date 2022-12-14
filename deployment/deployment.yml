@@ -15,7 +15,7 @@ spec:
     spec:
       containers:
       - name: nodejs
-        image: ssubhabrata/myubuntu:node-hello-world-v1
+        image: ssubhabrata/ubuntu-nodejs:node-hello-world-v3
         # command:
         # - sh
         # - "-c"
