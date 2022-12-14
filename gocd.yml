@@ -1,0 +1,75 @@
+format_version: 10
+pipelines:
+  myFirstPipeline:
+    group: sample
+    label_template: ${COUNT}
+    lock_behavior: none
+    display_order: -1
+    materials:
+      git-4e855ee:
+        git: https://github.com/covidboy/hello-node
+        ignore:
+        - deployment
+        shallow_clone: false
+        auto_update: true
+        branch: main
+    stages:
+    - Build:
+        fetch_materials: true
+        keep_artifacts: false
+        clean_workspace: false
+        approval:
+          type: success
+          allow_only_on_success: false
+        jobs:
+          dockerbuild:
+            timeout: 2
+            environment_variables:
+              dockerfilename: Dockerfile
+            tasks:
+            - exec:
+                command: pwd
+                run_if: passed
+            - exec:
+                arguments:
+                - -lrth
+                command: ls
+                run_if: passed
+            - exec:
+                command: whoami
+                run_if: passed
+            - exec:
+                arguments:
+                - $(dockerfilename)
+                command: echo Dockerfilename is 
+                run_if: passed
+            - exec:
+                arguments:
+                - go
+                command: groups
+                run_if: passed
+            - exec:
+                arguments:
+                - -v
+                command: docker
+                run_if: passed
+            - exec:
+                arguments:
+                - build -t node-hello-world .
+                command: docker
+                run_if: passed
+          push-to-container-registry:
+            timeout: 2
+            resources:
+            - docker
+            tasks:
+            - exec:
+                arguments:
+                - tag node-hello-world:latest ssubhabrata/ubuntu-nodejs:node-hello-world-v1
+                command: docker
+                run_if: passed
+            - exec:
+                arguments:
+                - push ssubhabrata/ubuntu-nodejs:node-hello-world-v1
+                command: docker
+                run_if: passed
