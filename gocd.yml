@@ -3,6 +3,7 @@ pipelines:
   mySecondPipeline:
     label_template: ${COUNT}
     materials:
+      git:
         git: https://github.com/covidboy/hello-node
         ignore:
         - deployment
