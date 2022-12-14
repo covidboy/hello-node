@@ -1,12 +1,8 @@
 format_version: 10
 pipelines:
   mySecondPipeline:
-    group: default
     label_template: ${COUNT}
-    lock_behavior: none
-    display_order: -1
     materials:
-      git-4e855ee:
         git: https://github.com/covidboy/hello-node
         ignore:
         - deployment
