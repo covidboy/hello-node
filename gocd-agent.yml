@@ -1,0 +1,42 @@
+apiVersion: v1
+kind: Pod
+metadata:
+  name: gocd-agent-{{ POD_POSTFIX }}
+  namespace: gocd
+  labels:
+    app: web
+spec:
+  serviceAccountName: default
+  containers:
+    - name: gocd-agent-container-{{ CONTAINER_POSTFIX }}
+      image: gocd/gocd-agent-docker-dind:v22.3.0
+      imagePullPolicy: IfNotPresent
+      env:
+        - name: GO_SERVER_URL
+          value: http://gocd-server:8153/go
+      securityContext:
+        privileged: true
+      # volumeMounts:
+      #   - mountPath: /var/run/secrets/kubernetes.io/serviceaccount
+      #     name: kube-api-access-xp25x
+      #     readOnly: true
+  serviceAccount: default
+  # volumes:
+  # - name: kube-api-access-xp25x
+  #   projected:
+  #     defaultMode: 420
+  #     sources:
+  #     - serviceAccountToken:
+  #         expirationSeconds: 3607
+  #         path: token
+  #     - configMap:
+  #         items:
+  #         - key: ca.crt
+  #           path: ca.crt
+  #         name: kube-root-ca.crt
+  #     - downwardAPI:
+  #         items:
+  #         - fieldRef:
+  #             apiVersion: v1
+  #             fieldPath: metadata.namespace
+  #           path: namespace
